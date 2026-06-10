@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang=zh-CN>
+<head>
+<meta charset=UTF-8>
+<title>蓝心小V推荐看板</title>
+<script src="https://cdn.jsdelivr.net/npm/echarts@5.4.3/dist/echarts.min.js"></script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:Microsoft YaHei,sans-serif;background:#f5f6f8;display:flex;min-height:100vh}
+.sidebar{width:220px;background:#fff;border-right:1px solid #e8e8e8;position:fixed;top:0;left:0;height:100vh;overflow-y:auto;z-index:100;padding:12px 0}
+.sidebar .search{margin:8px 12px;padding:6px 10px;border:1px solid #ddd;border-radius:4px;width:calc(100% - 24px);font-size:12px;color:#999}
+.sidebar .group-title{font-size:13px;font-weight:bold;padding:8px 16px;color:#333}
+.sidebar a{display:block;padding:5px 16px 5px 28px;color:#666;text-decoration:none;font-size:12px;line-height:1.5;border-left:3px solid transparent}
+.sidebar a:hover{background:#f0f7ff;color:#1890ff}
+.sidebar a.active{background:#e6f4ff;color:#1890ff;border-left-color:#1890ff;font-weight:500}
+.main{margin-left:220px;padding:20px;flex:1;min-width:0}
+.st{font-size:16px;font-weight:bold;color:#333;margin:24px 0 12px;padding-left:10px;border-left:3px solid #1890ff}
+.st:first-child{margin-top:0}
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:16px}
+.grid.c2{grid-template-columns:repeat(2,1fr)}
+.grid.c1{grid-template-columns:1fr}
+.card{background:#fff;border:1px solid #e8e8e8;padding:14px;min-height:300px}
+.card .ct{font-size:12px;font-weight:bold;color:#333;margin-bottom:6px}
+.card .cb{width:100%;height:270px}
+.card.tc{min-height:200px}
+.card.tc .cb{height:160px;overflow:auto}
+table.dt{width:100%;border-collapse:collapse;font-size:11px}
+table.dt th{background:#fafafa;border:1px solid #e8e8e8;padding:5px 6px;text-align:left;color:#666}
+table.dt td{border:1px solid #e8e8e8;padding:4px 6px;color:#333}
+</style>
+</head>
+<body>
+<div class="sidebar">
+<input class="search" placeholder="搜索" readonly>
+<div class="group-title">推荐位看板</div>
+<a class="active" href="#s1">推荐总览</a>
+<a href="#s2">推荐位类型</a>
+<a href="#s3">欢迎语推荐位</a>
+<a href="#s4">交互/样式分析</a>
+<a href="#s5">新老用户</a>
+<a href="#s6">转化漏斗</a>
+<a href="#s7">垂类分析</a>
+<a href="#s8">话术分析</a>
+<a href="#s9">性能分析</a>
+<a href="#s10">面板态行为分析</a>
+</div>
+<div class="main">
+<div class="st" id="s1">推荐总览</div>
+<div class="grid">
+<div class="card"><div class="ct">推荐曝光总人数</div><div class="cb" id="c1"></div></div>
+<div class="card"><div class="ct">推荐点击总人数</div><div class="cb" id="c2"></div></div>
+<div class="card"><div class="ct">推荐人数点击率</div><div class="cb" id="c3"></div></div>
+<div class="card"><div class="ct">推荐点击渗透率</div><div class="cb" id="c4"></div></div>
+<div class="card"><div class="ct">推荐会话人数</div><div class="cb" id="c5"></div></div>
+<div class="card"><div class="ct">推荐会话转化率</div><div class="cb" id="c6"></div></div>
+<div class="card"><div class="ct">推荐曝光总次数</div><div class="cb" id="c7"></div></div>
+<div class="card"><div class="ct">推荐点击总次数</div><div class="cb" id="c8"></div></div>
+<div class="card"><div class="ct">推荐次数点击率</div><div class="cb" id="c9"></div></div>
+<div class="card"><div class="ct">推荐人均点击数</div><div class="cb" id="c10"></div></div>
+<div class="card"><div class="ct">点击用户次日留存率</div><div class="cb" id="c11"></div></div>
+<div class="card"><div class="ct">点击用户7日留存率</div><div class="cb" id="c12"></div></div>
+</div>
+<div class="grid c1">
+<div class="card tc"><div class="ct">推荐规模汇总表</div><div class="cb" id="c13"></div></div>
+</div>
+<div class="st" id="s2">推荐位类型</div>
+<div class="grid">
+<div class="card"><div class="ct">各类型曝光人数</div><div class="cb" id="c14"></div></div>
+<div class="card"><div class="ct">各类型点击人数</div><div class="cb" id="c15"></div></div>
+<div class="card"><div class="ct">各类型人数点击率</div><div class="cb" id="c16"></div></div>
+<div class="card"><div class="ct">各类型曝光次数</div><div class="cb" id="c17"></div></div>
+<div class="card"><div class="ct">各类型点击次数</div><div class="cb" id="c18"></div></div>
+<div class="card"><div class="ct">各类型次数点击率</div><div class="cb" id="c19"></div></div>
+<div class="card"><div class="ct">各类型会话人数</div><div class="cb" id="c20"></div></div>
+<div class="card"><div class="ct">各类型会话转化率</div><div class="cb" id="c21"></div></div>
+<div class="card"><div class="ct">各类型曝光占比</div><div class="cb" id="c22"></div></div>
+<div class="card"><div class="ct">各类型点击占比</div><div class="cb" id="c23"></div></div>
+<div class="card"><div class="ct">各类型人均点击数</div><div class="cb" id="c24"></div></div>
+<div class="card"><div class="ct">各类型点击次日留存率</div><div class="cb" id="c25"></div></div>
+<div class="card"><div class="ct">各类型点击7日留存率</div><div class="cb" id="c26"></div></div>
+</div>
+<div class="grid c1">
+<div class="card tc"><div class="ct">推荐位交叉明细表</div><div class="cb" id="c27"></div></div>
+</div>
+<div class="st" id="s3">欢迎语推荐位</div>
+<div class="grid">
+<div class="card"><div class="ct">欢迎语推荐位曝光人数</div><div class="cb" id="c28"></div></div>
+<div class="card"><div class="ct">欢迎语推荐位曝光次数</div><div class="cb" id="c29"></div></div>
+<div class="card"><div class="ct">欢迎语推荐位点击人数</div><div class="cb" id="c30"></div></div>
+<div class="card"><div class="ct">欢迎语推荐位点击次数</div><div class="cb" id="c31"></div></div>
+<div class="card"><div class="ct">欢迎语推荐位人数点击率</div><div class="cb" id="c32"></div></div>
+<div class="card"><div class="ct">欢迎语推荐位次数点击率</div><div class="cb" id="c33"></div></div>
+<div class="card"><div class="ct">欢迎语推荐位会话人数</div><div class="cb" id="c34"></div></div>
+<div class="card"><div class="ct">欢迎语推荐位会话转化率</div><div class="cb" id="c35"></div></div>
+<div class="card"><div class="ct">各来源点击次日留存率</div><div class="cb" id="c36"></div></div>
+<div class="card"><div class="ct">各来源点击7日留存率</div><div class="cb" id="c37"></div></div>
+</div>
+<div class="grid c1">
+<div class="card tc"><div class="ct">欢迎语推荐位话术点击率TOP30</div><div class="cb" id="c38"></div></div>
+<div class="card tc"><div class="ct">欢迎语推荐位各场景点击率TOP30</div><div class="cb" id="c39"></div></div>
+</div>
+<div class="st" id="s4">交互/样式分析</div>
+<div class="grid">
+<div class="card"><div class="ct">各交互类型曝光人数</div><div class="cb" id="c40"></div></div>
+<div class="card"><div class="ct">各交互类型曝光次数</div><div class="cb" id="c41"></div></div>
+<div class="card"><div class="ct">各交互类型点击人数</div><div class="cb" id="c42"></div></div>
+<div class="card"><div class="ct">各交互类型点击次数</div><div class="cb" id="c43"></div></div>
+<div class="card"><div class="ct">各交互类型人数点击率</div><div class="cb" id="c44"></div></div>
+<div class="card"><div class="ct">各交互类型次数点击率</div><div class="cb" id="c45"></div></div>
+<div class="card"><div class="ct">各交互类型点击次日留存率</div><div class="cb" id="c46"></div></div>
+<div class="card"><div class="ct">各交互类型点击7日留存率</div><div class="cb" id="c47"></div></div>
+</div>
+<div class="grid">
+<div class="card"><div class="ct">各样式曝光人数</div><div class="cb" id="c47a"></div></div>
+<div class="card"><div class="ct">各样式曝光次数</div><div class="cb" id="c47b"></div></div>
+<div class="card"><div class="ct">各样式点击人数</div><div class="cb" id="c47c"></div></div>
+<div class="card"><div class="ct">各样式点击次数</div><div class="cb" id="c47d"></div></div>
+<div class="card"><div class="ct">各样式人数点击率</div><div class="cb" id="c47e"></div></div>
+<div class="card"><div class="ct">各样式次数点击率</div><div class="cb" id="c47f"></div></div>
+<div class="card"><div class="ct">各样式点击次日留存率</div><div class="cb" id="c47g"></div></div>
+<div class="card"><div class="ct">各样式点击7日留存率</div><div class="cb" id="c47h"></div></div>
+</div>
+<div class="st" id="s5">新老用户</div>
+<div class="grid">
+<div class="card"><div class="ct">新老用户曝光人数</div><div class="cb" id="c48"></div></div>
+<div class="card"><div class="ct">新老用户曝光次数</div><div class="cb" id="c49"></div></div>
+<div class="card"><div class="ct">新老用户点击人数</div><div class="cb" id="c50"></div></div>
+<div class="card"><div class="ct">新老用户点击次数</div><div class="cb" id="c51"></div></div>
+<div class="card"><div class="ct">新老用户人数点击率</div><div class="cb" id="c52"></div></div>
+<div class="card"><div class="ct">新老用户次数点击率</div><div class="cb" id="c53"></div></div>
+<div class="card"><div class="ct">新老用户点击次日留存率</div><div class="cb" id="c54"></div></div>
+<div class="card"><div class="ct">新老用户点击7日留存率</div><div class="cb" id="c55"></div></div>
+</div>
+<div class="grid c1">
+<div class="card tc"><div class="ct">新用户偏好场景TOP30</div><div class="cb" id="c56"></div></div>
+<div class="card tc"><div class="ct">老用户偏好场景TOP30</div><div class="cb" id="c57"></div></div>
+<div class="card tc"><div class="ct">新用户偏好话术TOP30</div><div class="cb" id="c58"></div></div>
+<div class="card tc"><div class="ct">老用户偏好话术TOP30</div><div class="cb" id="c59"></div></div>
+</div>
+<div class="st" id="s6">转化漏斗</div>
+<div class="grid c2">
+<div class="card"><div class="ct">推荐转化漏斗</div><div class="cb" id="c60"></div></div>
+<div class="card"><div class="ct">曝光-点击转化率</div><div class="cb" id="c61"></div></div>
+<div class="card"><div class="ct">点击-会话转化率</div><div class="cb" id="c62"></div></div>
+<div class="card"><div class="ct">端到端转化率</div><div class="cb" id="c63"></div></div>
+</div>
+<div class="st" id="s7">垂类分析</div>
+<div class="grid">
+<div class="card"><div class="ct">各垂类曝光人数</div><div class="cb" id="c64"></div></div>
+<div class="card"><div class="ct">各垂类曝光次数</div><div class="cb" id="c65"></div></div>
+<div class="card"><div class="ct">各垂类点击人数</div><div class="cb" id="c66"></div></div>
+<div class="card"><div class="ct">各垂类点击次数</div><div class="cb" id="c67"></div></div>
+<div class="card"><div class="ct">各垂类人数点击率</div><div class="cb" id="c68"></div></div>
+<div class="card"><div class="ct">各垂类次数点击率</div><div class="cb" id="c69"></div></div>
+<div class="card"><div class="ct">各垂类曝光占比</div><div class="cb" id="c70"></div></div>
+<div class="card"><div class="ct">各垂类点击率排行</div><div class="cb" id="c71"></div></div>
+<div class="card"><div class="ct">各垂类点击次日留存率</div><div class="cb" id="c72"></div></div>
+<div class="card"><div class="ct">各垂类点击7日留存率</div><div class="cb" id="c73"></div></div>
+</div>
+<div class="st" id="s8">话术分析</div>
+<div class="grid c1">
+<div class="card tc"><div class="ct">高点击率话术TOP100</div><div class="cb" id="c74"></div></div>
+<div class="card tc"><div class="ct">低点击率话术TOP100</div><div class="cb" id="c75"></div></div>
+</div>
+<div class="st" id="s9">性能分析</div>
+<div class="grid">
+<div class="card"><div class="ct">推荐位召回耗时</div><div class="cb" id="c76"></div></div>
+</div>
+<div class="st" id="s10">面板态行为分析</div>
+<div class="grid">
+<div class="card"><div class="ct">面板态点击时输入区状态分布</div><div class="cb" id="c77"></div></div>
+</div>
+</div>
+<script>
+var Z=["#4e7cee","#36cfc9","#9b8bff","#f6903d","#008685","#f08bb4"];
+function gd(n){var d=[],now=new Date("2026-06-08");for(var i=n-1;i>=0;i--){var t=new Date(now);t.setDate(t.getDate()-i);d.push((t.getMonth()+1).toString().padStart(2,"0")+"/"+t.getDate().toString().padStart(2,"0"))}return d}
+function g(n,a,b){return Array.from({length:n},()=>Math.floor(Math.random()*(b-a)+a))}
+function gr(n,a,b){return Array.from({length:n},()=>+(Math.random()*(b-a)+a).toFixed(1))}
+var d30=gd(30);
+function I(id,o){var e=document.getElementById(id);if(e)echarts.init(e).setOption(o)}
+function L(id,leg,data,pct){I(id,{color:Z,tooltip:{trigger:"axis"},legend:{data:leg,top:2,textStyle:{fontSize:10}},grid:{top:35,bottom:25,left:50,right:12},xAxis:{type:"category",data:d30,axisLabel:{fontSize:9}},yAxis:{type:"value",axisLabel:{fontSize:9,formatter:pct?"{value}%":function(v){return v>=10000?(v/10000).toFixed(0)+"w":v}}},series:data.map(function(d,i){return{name:leg[i],type:"line",data:d,smooth:true,symbol:"circle",symbolSize:3}})})}
+function P(id,data){I(id,{color:Z,tooltip:{trigger:"item",formatter:"{b}: {d}%"},legend:{orient:"vertical",right:8,top:"center",textStyle:{fontSize:10}},series:[{type:"pie",radius:["35%","60%"],center:["35%","50%"],label:{show:false},data:data}]})}
+function B(id,cats,vals,pct){I(id,{color:Z,tooltip:{trigger:"axis"},grid:{left:90,right:30,top:5,bottom:20},xAxis:{type:"value",axisLabel:{fontSize:9,formatter:pct?"{value}%":undefined}},yAxis:{type:"category",data:cats,axisLabel:{fontSize:9}},series:[{type:"bar",data:vals,label:{show:true,position:"right",fontSize:9,formatter:pct?"{c}%":"{c}"}}]})}
+// s1 推荐总览
+L("c1",["all","全屏态","面板态","圈搜"],[g(30,2300,2700).map(v=>v*1e4),g(30,1400,1600).map(v=>v*1e4),g(30,550,650).map(v=>v*1e4),g(30,380,450).map(v=>v*1e4)],false);
+L("c2",["all","全屏态","面板态","圈搜"],[g(30,330,420).map(v=>v*1e4),g(30,200,250).map(v=>v*1e4),g(30,70,90).map(v=>v*1e4),g(30,60,80).map(v=>v*1e4)],false);
+L("c3",["all","全屏态","面板态","圈搜"],[gr(30,14,16),gr(30,13,17),gr(30,12,16),gr(30,16,20)],true);
+L("c4",["all","全屏态","面板态","圈搜"],[gr(30,4,6),gr(30,5,7),gr(30,3,5),gr(30,4,6)],true);
+L("c5",["all","全屏态","面板态","圈搜"],[g(30,260,350).map(v=>v*1e4),g(30,150,200).map(v=>v*1e4),g(30,50,70).map(v=>v*1e4),g(30,60,80).map(v=>v*1e4)],false);
+L("c6",["all","全屏态","面板态","圈搜"],[gr(30,8,11),gr(30,8,12),gr(30,7,10),gr(30,9,13)],true);
+L("c7",["all","全屏态","面板态","圈搜"],[g(30,4250,4950).map(v=>v*1e4),g(30,2400,2700).map(v=>v*1e4),g(30,1100,1350).map(v=>v*1e4),g(30,750,900).map(v=>v*1e4)],false);
+L("c8",["all","全屏态","面板态","圈搜"],[g(30,520,670).map(v=>v*1e4),g(30,300,380).map(v=>v*1e4),g(30,120,160).map(v=>v*1e4),g(30,100,130).map(v=>v*1e4)],false);
+L("c9",["all","全屏态","面板态","圈搜"],[gr(30,11,14),gr(30,10,14),gr(30,9,13),gr(30,13,17)],true);
+L("c10",["all","全屏态","面板态","圈搜"],[gr(30,2.3,3.2),gr(30,2.5,3.5),gr(30,2.0,3.0),gr(30,2.2,3.2)],false);
+L("c11",["全屏态","面板态","圈搜"],[gr(30,35,42),gr(30,32,38),gr(30,38,45)],true);
+L("c12",["全屏态","面板态","圈搜"],[gr(30,18,24),gr(30,16,21),gr(30,20,26)],true);
+document.getElementById("c13").innerHTML='<table class="dt"><tr><th>位置</th><th>曝光人数</th><th>点击人数</th><th>人数CTR</th><th>曝光次数</th><th>点击次数</th><th>次数CTR</th><th>会话人数</th><th>转化率</th><th>人均点击</th><th>次留</th><th>7日留</th></tr><tr><td>全屏态</td><td>1523w</td><td>213w</td><td>14.0%</td><td>2654w</td><td>305w</td><td>11.5%</td><td>170w</td><td>11.2%</td><td>3.1</td><td>38%</td><td>21%</td></tr><tr><td>面板态</td><td>601w</td><td>84w</td><td>14.0%</td><td>1223w</td><td>134w</td><td>11.0%</td><td>58w</td><td>9.8%</td><td>2.7</td><td>35%</td><td>19%</td></tr><tr><td>圈搜</td><td>412w</td><td>74w</td><td>18.0%</td><td>845w</td><td>126w</td><td>15.0%</td><td>59w</td><td>14.4%</td><td>2.8</td><td>40%</td><td>23%</td></tr></table>';
+// s2 推荐位类型
+L("c14",["欢迎语","圈搜气泡","会话后","深度研究","组件"],[g(30,500,600).map(v=>v*1e4),g(30,300,380).map(v=>v*1e4),g(30,200,260).map(v=>v*1e4),g(30,80,120).map(v=>v*1e4),g(30,150,200).map(v=>v*1e4)],false);
+L("c15",["欢迎语","圈搜气泡","会话后","深度研究","组件"],[g(30,70,90).map(v=>v*1e4),g(30,55,70).map(v=>v*1e4),g(30,25,35).map(v=>v*1e4),g(30,12,18).map(v=>v*1e4),g(30,15,22).map(v=>v*1e4)],false);
+L("c16",["欢迎语","圈搜气泡","会话后","深度研究","组件"],[gr(30,13,17),gr(30,17,21),gr(30,11,15),gr(30,14,18),gr(30,8,12)],true);
+L("c17",["欢迎语","圈搜气泡","会话后","深度研究","组件"],[g(30,1300,1600).map(v=>v*1e4),g(30,800,1000).map(v=>v*1e4),g(30,500,650).map(v=>v*1e4),g(30,200,300).map(v=>v*1e4),g(30,350,450).map(v=>v*1e4)],false);
+L("c18",["欢迎语","圈搜气泡","会话后","深度研究","组件"],[g(30,180,230).map(v=>v*1e4),g(30,140,180).map(v=>v*1e4),g(30,60,80).map(v=>v*1e4),g(30,30,45).map(v=>v*1e4),g(30,40,55).map(v=>v*1e4)],false);
+L("c19",["欢迎语","圈搜气泡","会话后","深度研究","组件"],[gr(30,12,15),gr(30,16,19),gr(30,10,13),gr(30,13,16),gr(30,9,12)],true);
+L("c20",["欢迎语","会话后","引用区","深度研究"],[g(30,50,65).map(v=>v*1e4),g(30,18,25).map(v=>v*1e4),g(30,8,12).map(v=>v*1e4),g(30,10,15).map(v=>v*1e4)],false);
+L("c21",["欢迎语","会话后","引用区","深度研究"],[gr(30,9,13),gr(30,7,11),gr(30,10,14),gr(30,11,15)],true);
+P("c22",[{value:35,name:"欢迎语"},{value:18,name:"圈搜气泡"},{value:12,name:"会话后"},{value:10,name:"组件"},{value:8,name:"底部导航栏"},{value:6,name:"圈搜全局"},{value:4,name:"深度研究"},{value:3,name:"引用区"},{value:4,name:"其他"}]);
+P("c23",[{value:30,name:"欢迎语"},{value:22,name:"圈搜气泡"},{value:14,name:"会话后"},{value:10,name:"深度研究"},{value:8,name:"组件"},{value:6,name:"底部导航栏"},{value:10,name:"其他"}]);
+L("c24",["欢迎语","圈搜气泡","会话后","深度研究","组件"],[gr(30,2.8,3.4),gr(30,2.2,2.8),gr(30,1.8,2.4),gr(30,2.0,2.6),gr(30,1.5,2.0)],false);
+L("c25",["欢迎语","圈搜气泡","会话后","深度研究","组件"],[gr(30,36,42),gr(30,34,40),gr(30,38,44),gr(30,40,46),gr(30,30,36)],true);
+L("c26",["欢迎语","圈搜气泡","会话后","深度研究","组件"],[gr(30,19,25),gr(30,17,23),gr(30,21,27),gr(30,23,29),gr(30,15,20)],true);
+document.getElementById("c27").innerHTML='<table class="dt"><tr><th>类型</th><th>位置</th><th>来源</th><th>曝光</th><th>点击</th><th>CTR</th><th>会话</th><th>转化率</th><th>次留</th><th>7日留</th></tr><tr><td>欢迎语</td><td>全屏态</td><td>运营配置</td><td>320w</td><td>48w</td><td>15.0%</td><td>38w</td><td>11.9%</td><td>38%</td><td>21%</td></tr><tr><td>圈搜气泡</td><td>圈搜</td><td>屏幕推荐词</td><td>380w</td><td>72w</td><td>19%</td><td>-</td><td>-</td><td>35%</td><td>19%</td></tr></table>';
+// s3 欢迎语推荐位
+L("c28",["all","个人化场景","屏幕推荐词","运营配置"],[g(30,450,550).map(v=>v*1e4),g(30,100,130).map(v=>v*1e4),g(30,80,110).map(v=>v*1e4),g(30,250,310).map(v=>v*1e4)],false);
+L("c29",["all","个人化场景","屏幕推荐词","运营配置"],[g(30,1200,1500).map(v=>v*1e4),g(30,280,350).map(v=>v*1e4),g(30,220,280).map(v=>v*1e4),g(30,700,870).map(v=>v*1e4)],false);
+L("c30",["all","个人化场景","屏幕推荐词","运营配置"],[g(30,65,80).map(v=>v*1e4),g(30,15,20).map(v=>v*1e4),g(30,12,16).map(v=>v*1e4),g(30,38,44).map(v=>v*1e4)],false);
+L("c31",["all","个人化场景","屏幕推荐词","运营配置"],[g(30,180,220).map(v=>v*1e4),g(30,42,55).map(v=>v*1e4),g(30,35,45).map(v=>v*1e4),g(30,100,120).map(v=>v*1e4)],false);
+L("c32",["all","个人化场景","屏幕推荐词","运营配置"],[gr(30,13,17),gr(30,14,18),gr(30,12,16),gr(30,13,16)],true);
+L("c33",["all","个人化场景","屏幕推荐词","运营配置"],[gr(30,12,15),gr(30,13,16),gr(30,11,14),gr(30,12,15)],true);
+L("c34",["all","个人化场景","屏幕推荐词","运营配置"],[g(30,50,65).map(v=>v*1e4),g(30,12,16).map(v=>v*1e4),g(30,9,12).map(v=>v*1e4),g(30,29,37).map(v=>v*1e4)],false);
+L("c35",["all","个人化场景","屏幕推荐词","运营配置"],[gr(30,9,12),gr(30,10,13),gr(30,8,11),gr(30,9,12)],true);
+L("c36",["个人化场景","屏幕推荐词","运营配置"],[gr(30,37,44),gr(30,34,41),gr(30,36,43)],true);
+L("c37",["个人化场景","屏幕推荐词","运营配置"],[gr(30,20,26),gr(30,18,24),gr(30,19,25)],true);
+document.getElementById("c38").innerHTML='<table class="dt"><tr><th>#</th><th>日期</th><th>话术ID</th><th>推荐位来源</th><th>场景类型</th><th>推荐场景</th><th>交互类型</th><th>推荐位样式</th><th>端内外位置</th><th>曝光人数</th><th>点击人数</th><th>人数CTR</th></tr><tr><td>1</td><td>06/09</td><td>rec_001</td><td>运营配置</td><td>日程提取类</td><td>生日祝福</td><td>A-发面板</td><td>按钮</td><td>端内</td><td>12.3w</td><td>3.6w</td><td>29.3%</td></tr><tr><td>2</td><td>06/09</td><td>rec_015</td><td>个人化场景</td><td>日程提取类</td><td>航班提醒</td><td>A-发面板</td><td>Banner</td><td>端内</td><td>8.1w</td><td>2.2w</td><td>27.2%</td></tr><tr><td>3</td><td>06/08</td><td>rec_008</td><td>屏幕推荐词</td><td>商品搜同款</td><td>淘宝搜同款</td><td>D-小窗</td><td>普通</td><td>端外</td><td>15.0w</td><td>3.8w</td><td>25.3%</td></tr><tr><td>4</td><td>06/08</td><td>rec_023</td><td>运营配置</td><td>百科类</td><td>天气查询</td><td>A-发面板</td><td>按钮</td><td>端内</td><td>6.5w</td><td>1.5w</td><td>23.1%</td></tr><tr><td>5</td><td>06/07</td><td>rec_042</td><td>屏幕推荐词</td><td>二维码跳转类</td><td>微信扫码</td><td>D-小窗</td><td>普通</td><td>端外</td><td>9.2w</td><td>2.0w</td><td>21.7%</td></tr></table>';
+document.getElementById("c39").innerHTML='<table class="dt"><tr><th>#</th><th>日期</th><th>推荐位来源</th><th>场景类型</th><th>推荐场景</th><th>交互类型</th><th>推荐位样式</th><th>曝光人数</th><th>点击人数</th><th>人数CTR</th></tr><tr><td>1</td><td>06/09</td><td>个人化场景</td><td>日程提取类</td><td>生日祝福</td><td>A-发面板</td><td>按钮</td><td>5.2w</td><td>1.8w</td><td>34.6%</td></tr><tr><td>2</td><td>06/09</td><td>个人化场景</td><td>日程提取类</td><td>航班提醒</td><td>A-发面板</td><td>Banner</td><td>3.1w</td><td>0.9w</td><td>29.0%</td></tr><tr><td>3</td><td>06/08</td><td>运营配置</td><td>日程提取类</td><td>酒店推荐</td><td>A-发面板</td><td>普通</td><td>4.5w</td><td>1.2w</td><td>26.7%</td></tr><tr><td>4</td><td>06/08</td><td>屏幕推荐词</td><td>日程提取类</td><td>日程提取</td><td>D-小窗</td><td>按钮</td><td>8.3w</td><td>2.0w</td><td>24.1%</td></tr><tr><td>5</td><td>06/07</td><td>运营配置</td><td>百科类</td><td>天气查询</td><td>A-发面板</td><td>普通</td><td>12.0w</td><td>2.6w</td><td>21.7%</td></tr></table>';
+// s4 交互/样式分析 - 交互类型
+L("c40",["A-发面板","B-落地页","C-跳端","D-小窗"],[g(30,800,950).map(v=>v*1e4),g(30,350,430).map(v=>v*1e4),g(30,180,230).map(v=>v*1e4),g(30,450,550).map(v=>v*1e4)],false);
+L("c41",["A-发面板","B-落地页","C-跳端","D-小窗"],[g(30,2100,2500).map(v=>v*1e4),g(30,900,1100).map(v=>v*1e4),g(30,450,580).map(v=>v*1e4),g(30,1200,1400).map(v=>v*1e4)],false);
+L("c42",["A-发面板","B-落地页","C-跳端","D-小窗"],[g(30,110,140).map(v=>v*1e4),g(30,55,70).map(v=>v*1e4),g(30,18,25).map(v=>v*1e4),g(30,95,120).map(v=>v*1e4)],false);
+L("c43",["A-发面板","B-落地页","C-跳端","D-小窗"],[g(30,290,360).map(v=>v*1e4),g(30,140,180).map(v=>v*1e4),g(30,45,60).map(v=>v*1e4),g(30,250,310).map(v=>v*1e4)],false);
+L("c44",["A-发面板","B-落地页","C-跳端","D-小窗"],[gr(30,12,16),gr(30,14,18),gr(30,9,13),gr(30,20,24)],true);
+L("c45",["A-发面板","B-落地页","C-跳端","D-小窗"],[gr(30,12,15),gr(30,14,17),gr(30,9,12),gr(30,19,22)],true);
+L("c46",["A-发面板","B-落地页","C-跳端","D-小窗"],[gr(30,36,42),gr(30,34,40),gr(30,30,36),gr(30,38,44)],true);
+L("c47",["A-发面板","B-落地页","C-跳端","D-小窗"],[gr(30,19,25),gr(30,18,23),gr(30,15,20),gr(30,21,27)],true);
+// s4 交互/样式分析 - 推荐位样式
+L("c47a",["普通","按钮","Banner"],[g(30,1200,1400).map(v=>v*1e4),g(30,450,550).map(v=>v*1e4),g(30,180,230).map(v=>v*1e4)],false);
+L("c47b",["普通","按钮","Banner"],[g(30,3100,3600).map(v=>v*1e4),g(30,1100,1350).map(v=>v*1e4),g(30,450,560).map(v=>v*1e4)],false);
+L("c47c",["普通","按钮","Banner"],[g(30,170,200).map(v=>v*1e4),g(30,95,115).map(v=>v*1e4),g(30,32,42).map(v=>v*1e4)],false);
+L("c47d",["普通","按钮","Banner"],[g(30,430,520).map(v=>v*1e4),g(30,240,300).map(v=>v*1e4),g(30,80,105).map(v=>v*1e4)],false);
+L("c47e",["普通","按钮","Banner"],[gr(30,12,16),gr(30,20,24),gr(30,16,20)],true);
+L("c47f",["普通","按钮","Banner"],[gr(30,12,15),gr(30,20,23),gr(30,16,19)],true);
+L("c47g",["普通","按钮","Banner"],[gr(30,35,41),gr(30,38,44),gr(30,36,42)],true);
+L("c47h",["普通","按钮","Banner"],[gr(30,18,24),gr(30,21,26),gr(30,19,24)],true);
+// s5 新老用户
+L("c48",["新用户","老用户"],[g(30,300,450).map(v=>v*1e4),g(30,1500,1700).map(v=>v*1e4)],false);
+L("c49",["新用户","老用户"],[g(30,800,1100).map(v=>v*1e4),g(30,3500,4100).map(v=>v*1e4)],false);
+L("c50",["新用户","老用户"],[g(30,55,75).map(v=>v*1e4),g(30,250,310).map(v=>v*1e4)],false);
+L("c51",["新用户","老用户"],[g(30,150,200).map(v=>v*1e4),g(30,600,720).map(v=>v*1e4)],false);
+L("c52",["新用户","老用户"],[gr(30,18,24),gr(30,12,15)],true);
+L("c53",["新用户","老用户"],[gr(30,17,22),gr(30,14,18)],true);
+L("c54",["新用户","老用户"],[gr(30,28,35),gr(30,38,45)],true);
+L("c55",["新用户","老用户"],[gr(30,14,19),gr(30,20,26)],true);
+document.getElementById("c56").innerHTML='<table class="dt"><tr><th>#</th><th>推荐位来源</th><th>场景类型</th><th>推荐场景</th><th>曝光人数</th><th>点击人数</th><th>人数CTR</th></tr><tr><td>1</td><td>个人化场景</td><td>题目解答</td><td>数学题</td><td>8.5w</td><td>2.8w</td><td>32.9%</td></tr><tr><td>2</td><td>屏幕推荐词</td><td>二维码跳转类</td><td>微信扫码</td><td>6.2w</td><td>1.9w</td><td>30.6%</td></tr><tr><td>3</td><td>运营配置</td><td>屏幕问答词</td><td>天气查询</td><td>5.1w</td><td>1.4w</td><td>27.5%</td></tr><tr><td>4</td><td>屏幕推荐词</td><td>商品搜同款</td><td>淘宝搜同款</td><td>4.3w</td><td>1.1w</td><td>25.6%</td></tr><tr><td>5</td><td>运营配置</td><td>百科类</td><td>植物识别</td><td>3.8w</td><td>0.9w</td><td>23.7%</td></tr></table>';
+document.getElementById("c57").innerHTML='<table class="dt"><tr><th>#</th><th>推荐位来源</th><th>场景类型</th><th>推荐场景</th><th>曝光人数</th><th>点击人数</th><th>人数CTR</th></tr><tr><td>1</td><td>屏幕推荐词</td><td>屏幕问答词</td><td>天气查询</td><td>25.0w</td><td>5.5w</td><td>22.0%</td></tr><tr><td>2</td><td>屏幕推荐词</td><td>商品搜同款</td><td>淘宝搜同款</td><td>18.2w</td><td>3.8w</td><td>20.9%</td></tr><tr><td>3</td><td>屏幕推荐词</td><td>二维码跳转类</td><td>微信扫码</td><td>15.6w</td><td>3.1w</td><td>19.9%</td></tr><tr><td>4</td><td>个人化场景</td><td>题目解答</td><td>英语题</td><td>12.3w</td><td>2.3w</td><td>18.7%</td></tr><tr><td>5</td><td>运营配置</td><td>提取文字</td><td>OCR识别</td><td>9.8w</td><td>1.7w</td><td>17.3%</td></tr></table>';
+document.getElementById("c58").innerHTML='<table class="dt"><tr><th>#</th><th>话术ID</th><th>样式</th><th>场景</th><th>曝光</th><th>点击</th><th>CTR</th></tr><tr><td>1</td><td>rec_201</td><td>按钮</td><td>题目解答</td><td>5.2w</td><td>1.7w</td><td>32.7%</td></tr><tr><td>2</td><td>rec_105</td><td>Banner</td><td>二维码跳转</td><td>4.1w</td><td>1.2w</td><td>29.3%</td></tr></table>';
+document.getElementById("c59").innerHTML='<table class="dt"><tr><th>#</th><th>话术ID</th><th>样式</th><th>场景</th><th>曝光</th><th>点击</th><th>CTR</th></tr><tr><td>1</td><td>rec_302</td><td>普通</td><td>屏幕问答词</td><td>12.0w</td><td>2.5w</td><td>20.8%</td></tr><tr><td>2</td><td>rec_088</td><td>按钮</td><td>商品搜同款</td><td>8.5w</td><td>1.7w</td><td>20.0%</td></tr></table>';
+// s6 转化漏斗
+I("c60",{color:Z,tooltip:{trigger:"item"},series:[{type:"funnel",left:"10%",top:20,bottom:40,width:"80%",min:0,max:100,sort:"descending",gap:2,label:{show:true,position:"inside",fontSize:11},data:[{value:100,name:"曝光人数(1893w)"},{value:58,name:"点击人数(290w)"},{value:35,name:"会话发起(186w)"},{value:25,name:"会话完成(142w)"}]}]});
+L("c61",["曝光-点击转化率"],[gr(30,14,16)],true);
+L("c62",["点击-会话转化率"],[gr(30,60,68)],true);
+L("c63",["端到端转化率"],[gr(30,7,9)],true);
+// s7 垂类分析
+var vl=["技能","问答","闲聊","搜索","文本创作","图生图","文生图","快捷指令","视频剪辑"];
+L("c64",vl,[g(30,400,500).map(v=>v*1e4),g(30,350,430).map(v=>v*1e4),g(30,300,380).map(v=>v*1e4),g(30,250,320).map(v=>v*1e4),g(30,180,230).map(v=>v*1e4),g(30,120,160).map(v=>v*1e4),g(30,100,140).map(v=>v*1e4),g(30,80,110).map(v=>v*1e4),g(30,50,75).map(v=>v*1e4)],false);
+L("c65",vl,[g(30,1000,1250).map(v=>v*1e4),g(30,880,1080).map(v=>v*1e4),g(30,750,950).map(v=>v*1e4),g(30,620,790).map(v=>v*1e4),g(30,450,580).map(v=>v*1e4),g(30,300,400).map(v=>v*1e4),g(30,250,340).map(v=>v*1e4),g(30,200,270).map(v=>v*1e4),g(30,120,180).map(v=>v*1e4)],false);
+L("c66",vl,[g(30,60,80).map(v=>v*1e4),g(30,50,65).map(v=>v*1e4),g(30,35,48).map(v=>v*1e4),g(30,40,55).map(v=>v*1e4),g(30,25,35).map(v=>v*1e4),g(30,18,25).map(v=>v*1e4),g(30,15,22).map(v=>v*1e4),g(30,12,18).map(v=>v*1e4),g(30,8,13).map(v=>v*1e4)],false);
+L("c67",vl,[g(30,150,200).map(v=>v*1e4),g(30,130,170).map(v=>v*1e4),g(30,90,120).map(v=>v*1e4),g(30,100,135).map(v=>v*1e4),g(30,65,85).map(v=>v*1e4),g(30,45,62).map(v=>v*1e4),g(30,38,52).map(v=>v*1e4),g(30,30,42).map(v=>v*1e4),g(30,18,28).map(v=>v*1e4)],false);
+L("c68",vl,[gr(30,14,18),gr(30,13,17),gr(30,11,15),gr(30,15,19),gr(30,12,16),gr(30,14,18),gr(30,13,17),gr(30,14,18),gr(30,15,20)],true);
+L("c69",vl,[gr(30,13,16),gr(30,13,16),gr(30,11,14),gr(30,14,17),gr(30,12,15),gr(30,14,17),gr(30,13,16),gr(30,14,17),gr(30,14,18)],true);
+P("c70",[{value:18,name:"技能"},{value:16,name:"问答"},{value:14,name:"闲聊"},{value:12,name:"搜索"},{value:10,name:"文本创作"},{value:8,name:"图生图"},{value:7,name:"文生图"},{value:6,name:"快捷指令"},{value:5,name:"视频剪辑"},{value:4,name:"其他"}]);
+B("c71",["视频剪辑","快捷指令","文生图","图生图","文本创作","搜索","闲聊","问答","技能"],[15,14,13,14,12,15,11,13,14],true);
+L("c72",vl,[gr(30,35,42),gr(30,33,40),gr(30,30,37),gr(30,36,43),gr(30,34,41),gr(30,37,44),gr(30,35,42),gr(30,36,43),gr(30,38,45)],true);
+L("c73",vl,[gr(30,18,24),gr(30,17,23),gr(30,15,20),gr(30,19,25),gr(30,17,23),gr(30,20,26),gr(30,18,24),gr(30,19,25),gr(30,20,27)],true);
+// s8 话术分析
+document.getElementById("c74").innerHTML='<table class="dt"><tr><th>#</th><th>话术ID</th><th>推荐位类型</th><th>推荐位来源</th><th>场景类型</th><th>推荐场景</th><th>交互类型</th><th>推荐位样式</th><th>曝光</th><th>点击</th><th>CTR</th><th>次留</th><th>7日留</th></tr><tr><td>1</td><td>rec_001</td><td>欢迎语</td><td>运营配置</td><td>日程提取类</td><td>生日祝福</td><td>A-发面板</td><td>按钮</td><td>12w</td><td>3.6w</td><td>30%</td><td>42%</td><td>25%</td></tr><tr><td>2</td><td>rec_015</td><td>欢迎语</td><td>个人化场景</td><td>日程提取类</td><td>航班提醒</td><td>A-发面板</td><td>Banner</td><td>8w</td><td>2.2w</td><td>27.5%</td><td>40%</td><td>23%</td></tr><tr><td>3</td><td>rec_008</td><td>圈搜气泡</td><td>屏幕推荐词</td><td>商品搜同款</td><td>淘宝搜同款</td><td>D-小窗</td><td>普通</td><td>15w</td><td>3.8w</td><td>25.3%</td><td>38%</td><td>21%</td></tr></table>';
+document.getElementById("c75").innerHTML='<table class="dt"><tr><th>#</th><th>话术ID</th><th>推荐位类型</th><th>推荐位来源</th><th>场景类型</th><th>推荐场景</th><th>交互类型</th><th>推荐位样式</th><th>曝光</th><th>点击</th><th>CTR</th><th>次留</th><th>7日留</th></tr><tr><td>1</td><td>rec_099</td><td>欢迎语</td><td>运营配置</td><td>百科类</td><td>天气查询</td><td>A-发面板</td><td>普通</td><td>10w</td><td>0.3w</td><td>3%</td><td>25%</td><td>12%</td></tr><tr><td>2</td><td>rec_087</td><td>会话后</td><td>算法生成</td><td>百科类</td><td>知识问答</td><td>B-落地页</td><td>普通</td><td>8w</td><td>0.3w</td><td>3.8%</td><td>26%</td><td>13%</td></tr></table>';
+// s9 性能分析
+L("c76",["all","个人化场景","屏幕推荐词","运营配置"],[gr(30,120,180),gr(30,80,130),gr(30,150,220),gr(30,100,160)],false);
+// s10 面板态行为分析
+P("c77",[{value:42,name:"待命态"},{value:28,name:"ASR上屏"},{value:18,name:"键盘文字输入"},{value:12,name:"冻结态"}]);
+</script>
+</body>
+</html>
